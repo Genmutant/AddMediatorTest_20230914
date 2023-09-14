@@ -1,0 +1,32 @@
+name: BuildProject
+on: workflow_dispatch
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+        pull-requests: write
+        contents: read
+        deployments: write
+        actions: read
+        packages: write
+            
+    steps:
+    - uses: actions/checkout@v4  
+      with:
+        fetch-depth: 0
+  
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+          
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore
+      
+    - name: Test
+      run: dotnet test --no-build
+
